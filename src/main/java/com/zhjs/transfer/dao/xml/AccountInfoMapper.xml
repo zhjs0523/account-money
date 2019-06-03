@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhjs.transfer.dao.AccountInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zhjs.transfer.entity.AccountInfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="PAY_ACCOUNT_ID" property="payAccountId" jdbcType="VARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="BIGINT" />
+    <result column="VERSION_ID" property="versionId" jdbcType="BIGINT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+    <result column="MODIFIED" property="modified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PAY_ACCOUNT_ID, AMOUNT, VERSION_ID, REMARK, CREATED, MODIFIED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from account
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from account
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhjs.transfer.entity.AccountInfo" >
+    insert into account (ID, PAY_ACCOUNT_ID, AMOUNT,
+      VERSION_ID, REMARK, CREATED, 
+      MODIFIED)
+    values (#{id,jdbcType=BIGINT}, #{payAccountId,jdbcType=VARCHAR}, #{amount,jdbcType=BIGINT}, 
+      #{versionId,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{modified,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhjs.transfer.entity.AccountInfo" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="payAccountId != null" >
+        PAY_ACCOUNT_ID,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="versionId != null" >
+        VERSION_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="modified != null" >
+        MODIFIED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="payAccountId != null" >
+        #{payAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="versionId != null" >
+        #{versionId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null" >
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhjs.transfer.entity.AccountInfo" >
+    update account
+    <set >
+      <if test="payAccountId != null" >
+        PAY_ACCOUNT_ID = #{payAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        AMOUNT = #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="versionId != null" >
+        VERSION_ID = #{versionId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null" >
+        MODIFIED = #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhjs.transfer.entity.AccountInfo" >
+    update account
+    set PAY_ACCOUNT_ID = #{payAccountId,jdbcType=VARCHAR},
+      AMOUNT = #{amount,jdbcType=BIGINT},
+      VERSION_ID = #{versionId,jdbcType=BIGINT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      MODIFIED = #{modified,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id = "queryBalance" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List"/>
+    from account
+    where PAY_ACCOUNT_ID = #{payAccountId}
+  </select>
+
+</mapper>

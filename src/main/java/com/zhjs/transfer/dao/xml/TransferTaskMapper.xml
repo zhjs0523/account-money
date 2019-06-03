@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhjs.transfer.dao.TransferTaskMapper">
+  <resultMap id="BaseResultMap" type="com.zhjs.transfer.entity.TransferTask">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TRANSACTION_ID" jdbcType="VARCHAR" property="transactionId" />
+    <result column="PAY_ACCOUNT_ID" jdbcType="VARCHAR" property="payAccountId" />
+    <result column="DIRECTION" jdbcType="INTEGER" property="direction" />
+    <result column="AMOUNT" jdbcType="BIGINT" property="amount" />
+    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="MODIFIED" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, TRANSACTION_ID, PAY_ACCOUNT_ID, DIRECTION, AMOUNT, STATUS, REMARK, CREATED, MODIFIED
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from transfer_task
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from transfer_task
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhjs.transfer.entity.TransferTask">
+    insert into transfer_task (ID, TRANSACTION_ID, PAY_ACCOUNT_ID,
+      DIRECTION, AMOUNT, STATUS, 
+      REMARK, CREATED, MODIFIED
+      )
+    values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=VARCHAR}, #{payAccountId,jdbcType=VARCHAR}, 
+      #{direction,jdbcType=INTEGER}, #{amount,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{modified,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhjs.transfer.entity.TransferTask">
+    insert into transfer_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="transactionId != null">
+        TRANSACTION_ID,
+      </if>
+      <if test="payAccountId != null">
+        PAY_ACCOUNT_ID,
+      </if>
+      <if test="direction != null">
+        DIRECTION,
+      </if>
+      <if test="amount != null">
+        AMOUNT,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="created != null">
+        CREATED,
+      </if>
+      <if test="modified != null">
+        MODIFIED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payAccountId != null">
+        #{payAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null">
+        #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhjs.transfer.entity.TransferTask">
+    update transfer_task
+    <set>
+      <if test="transactionId != null">
+        TRANSACTION_ID = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payAccountId != null">
+        PAY_ACCOUNT_ID = #{payAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null">
+        DIRECTION = #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        AMOUNT = #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        MODIFIED = #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhjs.transfer.entity.TransferTask">
+    update transfer_task
+    set TRANSACTION_ID = #{transactionId,jdbcType=VARCHAR},
+      PAY_ACCOUNT_ID = #{payAccountId,jdbcType=VARCHAR},
+      DIRECTION = #{direction,jdbcType=INTEGER},
+      AMOUNT = #{amount,jdbcType=BIGINT},
+      STATUS = #{status,jdbcType=INTEGER},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      MODIFIED = #{modified,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id = "updateByTransactionIdAndStatus" parameterType="java.lang.Object">
+    update transfer_task
+    set STATUS = #{newStatus,jdbcType=INTEGER},
+      MODIFIED = now()
+    where status = #{oldStatus} and TRANSACTION_ID = #{requestId}
+  </update>
+
+  <select id="queryByTransactionId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List"/>
+    from transfer_task
+    where TRANSACTION_ID = #{requestId,jdbcType=VARCHAR}
+  </select>
+</mapper>

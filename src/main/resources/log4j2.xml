@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<Configuration status="off" monitorInterval="1800">
+
+	<Properties>
+		<property name="projectName">account-money</property>
+
+		<property name="logPattern">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %-5level %logger{36}-%msg%n</property>
+		<property name="logPath">/Users/zhjs/logs/accountMoney/</property>
+		<property name="fileName">${logPath}/${projectName}/info.log</property>
+		<property name="errorFileName">${logPath}/${projectName}/error.log</property>
+		<property name="warnFileName">${logPath}/${projectName}/warn.log</property>
+		<property name="rollingFilePattern">${logPath}/${projectName}/info.log.%d{yyyy-MM-dd-HH}</property>
+		<property name="errorRollingFilePattern">${logPath}/${projectName}/error.log.%d{yyyy-MM-dd-HH}</property>
+		<property name="warnRollingFilePattern">${logPath}/${projectName}/warn.log.%d{yyyy-MM-dd-HH}</property>
+		<property name="everyFileSize">3 MB</property>
+		<property name="maxFiles">50</property>
+	</Properties>
+
+	<Appenders>
+		<!-- 所有日志 -->
+		<RollingFile name="RollingFile" fileName="${fileName}"
+			filePattern="${rollingFilePattern}">
+			<PatternLayout pattern="${logPattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<!--
+				<SizeBasedTriggeringPolicy size="${everyFileSize}" />
+				-->
+			</Policies>
+			<!--
+			<DefaultRolloverStrategy max="${maxFiles}" />
+			-->
+		</RollingFile>
+
+		<!-- warn 日志 -->
+		<RollingFile name="WarnRollingFile" fileName="${warnFileName}"
+								 filePattern="${warnRollingFilePattern}">
+			<PatternLayout
+					pattern="${logPattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+				<ThresholdFilter level="WARN"  onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+
+		<!-- error日志 -->
+		<RollingFile name="ErrorRollingFile" fileName="${errorFileName}"
+					 filePattern="${errorRollingFilePattern}">
+			<PatternLayout pattern="${logPattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<!--
+				<SizeBasedTriggeringPolicy size="${everyFileSize}" />
+				-->
+			</Policies>
+			<!--
+			<DefaultRolloverStrategy max="${maxFiles}" />
+			-->
+			<Filters>
+				<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+
+		<Console name="Console" target="SYSTEM_OUT" ignoreExceptions="false">
+			<PatternLayout pattern="${logPattern}" />
+		</Console>
+	</Appenders>
+
+	<!--<Loggers>-->
+
+		<!--<logger name="com.alibaba.dubbo" level="info"/>-->
+
+		<!--<Root level="info">-->
+			<!--<AppenderRef ref="Console" />-->
+			<!--<AppenderRef ref="RollingFile" />-->
+			<!--<AppenderRef ref="WarnRollingFile" />-->
+			<!--<AppenderRef ref="ErrorRollingFile" />-->
+		<!--</Root>-->
+	<!--</Loggers>-->
+	<loggers>
+		<AsyncLogger name="com.alibaba.dubbo" level="info"/>
+
+		<AsyncRoot level = "info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+			<AppenderRef ref="WarnRollingFile" />
+			<AppenderRef ref="ErrorRollingFile" />
+		</AsyncRoot>
+	</loggers>
+</Configuration>
