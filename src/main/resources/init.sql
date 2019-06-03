@@ -1,0 +1,64 @@
+CREATE DATABASE transfer_0;
+CREATE DATABASE transfer_1;
+
+-- 在上述两个数据库中分别创建以下四个表
+
+CREATE TABLE `account_0` (
+`ID` bigint(20) NOT NULL COMMENT 'id',
+`PAY_ACCOUNT_ID` varchar(50) DEFAULT NULL COMMENT '支付账户编号',
+`AMOUNT` bigint(20) DEFAULT NULL COMMENT '金额(分)',
+`VERSION_ID` bigint(20) DEFAULT NULL COMMENT '版本编号',
+`REMARK` varchar(256) DEFAULT NULL COMMENT '备注',
+`CREATED` datetime DEFAULT NULL COMMENT '创建时间',
+`MODIFIED` datetime DEFAULT NULL COMMENT '修改时间',
+PRIMARY KEY (`ID`),
+UNIQUE KEY `uniq_pay_account_id` (`PAY_ACCOUNT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='账户金额表';
+
+
+CREATE TABLE `account_1` (
+`ID` bigint(20) NOT NULL COMMENT 'id',
+`PAY_ACCOUNT_ID` varchar(50) DEFAULT NULL COMMENT '支付账户编号',
+`AMOUNT` bigint(20) DEFAULT NULL COMMENT '金额(分)',
+`VERSION_ID` bigint(20) DEFAULT NULL COMMENT '版本编号',
+`REMARK` varchar(256) DEFAULT NULL COMMENT '备注',
+`CREATED` datetime DEFAULT NULL COMMENT '创建时间',
+`MODIFIED` datetime DEFAULT NULL COMMENT '修改时间',
+PRIMARY KEY (`ID`),
+UNIQUE KEY `uniq_pay_account_id` (`PAY_ACCOUNT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='账户金额表';
+
+
+CREATE TABLE `transfer_task_0` (
+`ID` bigint(20) NOT NULL COMMENT 'id',
+`TRANSACTION_ID` varchar(50) DEFAULT NULL COMMENT '交易单号',
+`PAY_ACCOUNT_ID` varchar(50) DEFAULT NULL COMMENT '支付账户编号',
+`DIRECTION` int(11) DEFAULT NULL COMMENT '方向',
+`AMOUNT` bigint(20) DEFAULT NULL COMMENT '交易金额(分)',
+`STATUS` int(11) DEFAULT NULL COMMENT '任务状态',
+`REMARK` varchar(256) DEFAULT NULL COMMENT '备注',
+`CREATED` datetime DEFAULT NULL COMMENT '创建时间',
+`MODIFIED` datetime DEFAULT NULL COMMENT '修改时间',
+PRIMARY KEY (`ID`),
+UNIQUE KEY `uniq_transaction_id` (`TRANSACTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='转账任务表';
+
+
+
+CREATE TABLE `transfer_task_1` (
+`ID` bigint(20) NOT NULL COMMENT 'id',
+`TRANSACTION_ID` varchar(50) DEFAULT NULL COMMENT '交易单号',
+`PAY_ACCOUNT_ID` varchar(50) DEFAULT NULL COMMENT '支付账户编号',
+`DIRECTION` int(11) DEFAULT NULL COMMENT '方向',
+`AMOUNT` bigint(20) DEFAULT NULL COMMENT '交易金额(分)',
+`STATUS` int(11) DEFAULT NULL COMMENT '任务状态',
+`REMARK` varchar(256) DEFAULT NULL COMMENT '备注',
+`CREATED` datetime DEFAULT NULL COMMENT '创建时间',
+`MODIFIED` datetime DEFAULT NULL COMMENT '修改时间',
+PRIMARY KEY (`ID`),
+UNIQUE KEY `uniq_transaction_id` (`TRANSACTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='转账任务表';
+
+
+
+
