@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author WanHongLei
- * @version 创建时间：2019年2月13日 上午10:27:06 类说明
+ * 加解密验签工具类
+ * @author zhjs
  */
 public class RSAUtil {
     /**

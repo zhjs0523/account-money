@@ -17,9 +17,6 @@ public class DESUtils {
 	
 	/**
 	 *@Desc 解密
-	 *@Date 2017年10月25日 下午1:43:09
-	 *@Author GuoFeng
-	 *@Since jdk 1.7
 	 *@param key 密钥
 	 *@retrun String 注意解密出错时会返回null
 	 */
@@ -36,9 +33,6 @@ public class DESUtils {
 	
 	/**
 	 *@Desc 加密
-	 *@Date 2017年10月25日 下午1:43:19
-	 *@Author GuoFeng
-	 *@Since jdk 1.7
 	 *@param key 密钥
 	 *@param content 加密内容
 	 *@retrun String 注意解密出错时会返回null

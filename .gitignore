@@ -1,6 +1,6 @@
 HELP.md
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
@@ -10,6 +10,9 @@ HELP.md
 .settings
 .springBeans
 .sts4-cache
+.mvnw
+.mvnw.cmd
+
 
 ### IntelliJ IDEA ###
 .idea

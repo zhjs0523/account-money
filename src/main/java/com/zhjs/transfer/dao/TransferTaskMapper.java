@@ -4,6 +4,8 @@ import com.zhjs.transfer.entity.TransferTask;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TransferTaskMapper {
     int deleteByPrimaryKey(Long id);
@@ -21,4 +23,6 @@ public interface TransferTaskMapper {
     int updateByTransactionIdAndStatus(@Param("newStatus") Integer newStatus, @Param("oldStatus") Integer oldStatus, @Param("requestId") String requestId);
 
     TransferTask queryByTransactionId(String requestId);
+
+    List<TransferTask> queryByStatus(Integer status);
 }

@@ -80,16 +80,10 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountException("账户异常");
         }
         //扣减A账户余额  加乐观锁控制
-        AccountInfo updateAccount = new AccountInfo();
-        updateAccount.setId(accountInfo.getId());
-        updateAccount.setAmount(accountInfo.getAmount() - transferDTO.getAmount());
-        updateAccount.setModified(new Date());
-        updateAccount.setVersionId(accountInfo.getVersionId() + 1);
-        accountInfoMapper.updateByPrimaryKeySelective(updateAccount);
-
+        accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() - transferDTO.getAmount(),transferDTO.getPayerAccount());
         //A账户扣减成功，发送消息到MQ，B账户增加余额，发送成功，提交事务，发送失败，事务回滚
         try{
-            mqProducerService.send(topics, MQTags.INCREASE,transferDTO.getRequestId(), transferDTO);
+            mqProducerService.send(topics, MQTags.INCREASE,String.valueOf(System.currentTimeMillis()), transferDTO);
         }catch(Exception e){
             log.error(e.getMessage());
             throw new MQClientException(0,"消息发送失败");
@@ -99,7 +93,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean increase(TransferDTO transferDTO) throws AccountException {
+    public boolean increase(TransferDTO transferDTO) throws AccountException{
 
         AccountInfo accountInfo = accountInfoMapper.queryBalance(transferDTO.getPayeeAccount());
         //TODO  模拟一个业务失败的场景，使的A账户逆向操作
@@ -124,21 +118,22 @@ public class AccountServiceImpl implements AccountService {
         }
 
         //增加B账户的余额
-        AccountInfo updateAccount = new AccountInfo();
-        updateAccount.setId(accountInfo.getId());
-        updateAccount.setAmount(accountInfo.getAmount() + transferDTO.getAmount());
-        updateAccount.setVersionId(accountInfo.getVersionId() + 1);
-        updateAccount.setModified(new Date());
-        int result = accountInfoMapper.updateByPrimaryKeySelective(updateAccount);
-
+        int result = accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() + transferDTO.getAmount(),transferDTO.getPayeeAccount());
         //发送MQ消息，更改本地消息表状态或回滚A账户余额
-        if(result < 1){
-            //回滚A账户余额
-            mqProducerService.send(topics,MQTags.ACCOUNT_CALLBACK,transferDTO.getRequestId(),transferDTO);
-        }else{
-            //更新消息为最终状态
-            mqProducerService.send(topics,MQTags.INCREASE_SUCCESS,transferDTO.getRequestId(),transferDTO);
+        try{
+            if(result < 1){
+                //回滚A账户余额
+                mqProducerService.send(topics,MQTags.ACCOUNT_CALLBACK,String.valueOf(System.currentTimeMillis()),transferDTO);
+            }else{
+                //更新消息为最终状态
+                mqProducerService.send(topics,MQTags.INCREASE_SUCCESS,String.valueOf(System.currentTimeMillis()),transferDTO);
+            }
+        }catch(Exception e){
+            //自己把异常吃掉，不抛出
+            //这样可以使B账户增加余额的事物提交成功，不影响后续流程，通知A系统使用补偿机制
+            log.error("通知MQ失败",e);
         }
+
 
         return true;
     }
@@ -147,13 +142,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean callbackAccount(TransferDTO transferDTO) {
 
         AccountInfo accountInfo = accountInfoMapper.queryBalance(transferDTO.getPayerAccount());
-        AccountInfo updateAccount = new AccountInfo();
-        updateAccount.setId(accountInfo.getId());
-        updateAccount.setAmount(accountInfo.getAmount() + transferDTO.getAmount());
-        updateAccount.setVersionId(accountInfo.getVersionId() + 1);
-        updateAccount.setModified(new Date());
-        accountInfoMapper.updateByPrimaryKeySelective(updateAccount);
-
+        accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() + transferDTO.getAmount(),transferDTO.getPayerAccount());
         //更新消息表状态为业务失败  和A账户在同一个事务中
         //处理失败的消息，定时任务处理(补偿措施  TCC)
         transferTaskMapper.updateByTransactionIdAndStatus(TaskStatus.FAILED,TaskStatus.SUCCESS,transferDTO.getRequestId());

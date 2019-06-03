@@ -122,4 +122,13 @@
     where PAY_ACCOUNT_ID = #{payAccountId}
   </select>
 
+  <update id = "updateAccountInfo" parameterType="java.lang.Object">
+    update account
+    set version_id = #{versionId} + 1,
+    MODIFIED = now(),
+    AMOUNT = #{amount}
+    where version_id = #{versionId}
+    and PAY_ACCOUNT_ID = #{payAccountId}
+  </update>
+
 </mapper>

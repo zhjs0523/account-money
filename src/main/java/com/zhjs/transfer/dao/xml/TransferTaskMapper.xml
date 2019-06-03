@@ -152,4 +152,11 @@
     from transfer_task
     where TRANSACTION_ID = #{requestId,jdbcType=VARCHAR}
   </select>
+
+  <select id = "queryByStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+     <include refid="Base_Column_List"/>
+    from transfer_task
+    where STATUS #{status}
+  </select>
 </mapper>

@@ -30,7 +30,7 @@ public interface AccountService {
      * @param transferDTO
      * @return
      */
-    boolean increase(TransferDTO transferDTO) throws AccountException;
+    boolean increase(TransferDTO transferDTO) throws AccountException, MQClientException;
 
 
     /**
