@@ -1,16 +1,16 @@
 package com.zhjs.transfer.service.impl;
 
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.client.producer.SendCallback;
-import com.alibaba.rocketmq.common.message.Message;
 import com.zhjs.transfer.entity.MQEntity;
 import com.zhjs.transfer.service.MQProducerService;
 import com.zhjs.transfer.utils.SerializableUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
 
 /**
  * @ClassName: MQProducerServiceImpl
@@ -27,7 +27,7 @@ public class MQProducerServiceImpl implements MQProducerService{
     private DefaultMQProducer producer;
 
     @Override
-    public void send(String topic, String tags, String mqKey, MQEntity entity) {
+    public void send(String topic, String tags, String mqKey, MQEntity entity) throws MQClientException {
         entity.setMqKey(mqKey);
         log.info("业务:{},tags:{},mqKey:{},entity:{}",topic, tags, mqKey, entity);
         Message msg = new Message(topic,tags,mqKey, SerializableUtil.toByte(entity));
@@ -36,7 +36,7 @@ public class MQProducerServiceImpl implements MQProducerService{
             producer.send(msg);
         }catch(Exception e){
             log.error("消息发送失败，msg:{}",msg);
-            throw new RuntimeException("消息发送失败！",e);
+            throw new MQClientException(0,"消息发送失败！");
         }
     }
 

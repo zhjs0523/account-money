@@ -22,7 +22,7 @@ public interface TransferTaskMapper {
 
     int updateByTransactionIdAndStatus(@Param("newStatus") Integer newStatus, @Param("oldStatus") Integer oldStatus, @Param("requestId") String requestId);
 
-    TransferTask queryByTransactionId(String requestId);
+    TransferTask queryByTransactionIdAndPaymentId(@Param("requestId") String requestId,@Param("payAccountId") String payAccountId);
 
-    List<TransferTask> queryByStatus(Integer status);
+    List<TransferTask> queryByStatus(@Param("status") Integer status,@Param("direction")Integer direction);
 }

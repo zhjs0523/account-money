@@ -146,17 +146,18 @@
     where status = #{oldStatus} and TRANSACTION_ID = #{requestId}
   </update>
 
-  <select id="queryByTransactionId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="queryByTransactionIdAndPaymentId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
       <include refid="Base_Column_List"/>
     from transfer_task
     where TRANSACTION_ID = #{requestId,jdbcType=VARCHAR}
+    and PAY_ACCOUNT_ID = #{payAccountId,jdbcType=VARCHAR}
   </select>
 
   <select id = "queryByStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
      <include refid="Base_Column_List"/>
     from transfer_task
-    where STATUS #{status}
+    where STATUS #{status} and direction = #{direction}
   </select>
 </mapper>

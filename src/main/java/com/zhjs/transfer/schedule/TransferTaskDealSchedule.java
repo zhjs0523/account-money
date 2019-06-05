@@ -1,5 +1,6 @@
 package com.zhjs.transfer.schedule;
 
+import com.zhjs.transfer.contants.DirectionEnum;
 import com.zhjs.transfer.contants.MQTags;
 import com.zhjs.transfer.contants.TaskStatus;
 import com.zhjs.transfer.dao.TransferTaskMapper;
@@ -21,7 +22,7 @@ import java.util.List;
  * @createDate: 2019/6/3 下午3:27
  * @JDK: 1.8
  * @Desc: 补偿机制
- * 每隔两个小时查询一次消息表，状态为SUCCESS的消息，重新发送
+ * 每隔3个小时查询一次消息表，状态为SUCCESS的消息，重新发送
  */
 @Component
 @Slf4j
@@ -36,10 +37,10 @@ public class TransferTaskDealSchedule {
     @Value("${rocketmq.consumer.topics}")
     private String topics;
 
-//    @Scheduled(cron = "0 0 0/2 * * ?")
+//    @Scheduled(cron = "0 0 0/3 * * ?")
     public void dealTransferTask(){
         try{
-            List<TransferTask> transferTasks = transferTaskMapper.queryByStatus(TaskStatus.SUCCESS);
+            List<TransferTask> transferTasks = transferTaskMapper.queryByStatus(TaskStatus.SUCCESS, DirectionEnum.DECREASE.getValue());
             if(!CollectionUtils.isEmpty(transferTasks)){
                 for (TransferTask transferTask : transferTasks) {
                     TransferDTO transferDTO = new TransferDTO();

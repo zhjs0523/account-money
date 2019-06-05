@@ -1,6 +1,5 @@
 package com.zhjs.transfer.service.impl;
 
-import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.zhjs.transfer.contants.DirectionEnum;
 import com.zhjs.transfer.contants.MQTags;
 import com.zhjs.transfer.contants.TaskStatus;
@@ -14,6 +13,7 @@ import com.zhjs.transfer.service.AccountService;
 import com.zhjs.transfer.service.MQProducerService;
 import com.zhjs.transfer.utils.SnowFlake;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.exception.MQClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -94,13 +94,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean increase(TransferDTO transferDTO) throws AccountException{
-
-        AccountInfo accountInfo = accountInfoMapper.queryBalance(transferDTO.getPayeeAccount());
-        //TODO  模拟一个业务失败的场景，使的A账户逆向操作
-        if("风险账户".equals(accountInfo.getPayAccountId())){
-            throw new AccountException("风险账户");
-        }
+    public boolean increase(TransferDTO transferDTO) throws AccountException, MQClientException {
 
         try{
             //存放转账任务记录，做幂等处理
@@ -119,21 +113,31 @@ public class AccountServiceImpl implements AccountService {
             log.error("B系统添加转账任务记录失败",e);
         }
 
+
         //增加B账户的余额
-        int result = accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() + transferDTO.getAmount(),transferDTO.getPayeeAccount());
         //发送MQ消息，更改本地消息表状态或回滚A账户余额
         try{
+            AccountInfo accountInfo = accountInfoMapper.queryBalance(transferDTO.getPayeeAccount());
+            //TODO  模拟一个业务失败的场景，使的A账户逆向操作
+            if("风险账户".equals(accountInfo.getPayAccountId())){
+                throw new AccountException("风险账户");
+            }
+
+            int result = accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() + transferDTO.getAmount(),transferDTO.getPayeeAccount());
             if(result < 1){
                 //回滚A账户余额
-                mqProducerService.send(topics,MQTags.ACCOUNT_CALLBACK,String.valueOf(System.currentTimeMillis()),transferDTO);
+                throw new AccountException("增加余额失败，数据回滚");
             }else{
                 //更新消息为最终状态
                 mqProducerService.send(topics,MQTags.INCREASE_SUCCESS,String.valueOf(System.currentTimeMillis()),transferDTO);
             }
-        }catch(Exception e){
+        }catch (MQClientException e){
             //自己把异常吃掉，不抛出
             //这样可以使B账户增加余额的事物提交成功，不影响后续流程，通知A系统使用补偿机制
             log.error("通知MQ失败",e);
+        }catch (Exception e){
+            //回滚A
+            mqProducerService.send(topics,MQTags.ACCOUNT_CALLBACK,String.valueOf(System.currentTimeMillis()),transferDTO);
         }
 
 
@@ -154,7 +158,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean updateTask(TransferDTO transferDTO) throws AccountException {
         try{
-            TransferTask transferTask = transferTaskMapper.queryByTransactionId(transferDTO.getRequestId());
+            TransferTask transferTask = transferTaskMapper.queryByTransactionIdAndPaymentId(transferDTO.getRequestId(),transferDTO.getPayerAccount());
             if(null != transferTask){
                 transferTaskMapper.updateByTransactionIdAndStatus(TaskStatus.FINISHED,transferTask.getStatus(),transferTask.getTransactionId());
             }

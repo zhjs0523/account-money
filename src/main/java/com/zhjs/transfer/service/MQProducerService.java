@@ -1,7 +1,8 @@
 package com.zhjs.transfer.service;
 
-import com.alibaba.rocketmq.client.producer.SendCallback;
 import com.zhjs.transfer.entity.MQEntity;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendCallback;
 
 /**
  * @ClassName: MQProducerService
@@ -19,7 +20,7 @@ public interface MQProducerService {
      * @param mqKey   mq关键词
      * @param entity 消息实体
      */
-    public void send(String topic, String tags, String mqKey,MQEntity entity);
+    public void send(String topic, String tags, String mqKey,MQEntity entity) throws MQClientException;
 
     /**
      * 发送MQ,提供回调函数，超时时间默认3s

@@ -113,10 +113,16 @@
 		<!-- log end-->
 
 		<!--rocketmq客户端 依赖-->
+		<!--<dependency>-->
+			<!--<groupId>com.alibaba.rocketmq</groupId>-->
+			<!--<artifactId>rocketmq-client</artifactId>-->
+			<!--<version>3.2.6</version>-->
+		<!--</dependency>-->
+
 		<dependency>
-			<groupId>com.alibaba.rocketmq</groupId>
+			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
-			<version>3.2.6</version>
+			<version>4.3.0</version>
 		</dependency>
 
 		<dependency>
