@@ -5,7 +5,7 @@
 		<property name="projectName">account-money</property>
 
 		<property name="logPattern">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %-5level %logger{36}-%msg%n</property>
-		<property name="logPath">/Users/zhjs/logs/accountMoney/</property>
+		<property name="logPath">/Users/zhjs/logs/</property>
 		<property name="fileName">${logPath}/${projectName}/info.log</property>
 		<property name="errorFileName">${logPath}/${projectName}/error.log</property>
 		<property name="warnFileName">${logPath}/${projectName}/warn.log</property>
