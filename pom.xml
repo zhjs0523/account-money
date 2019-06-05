@@ -23,9 +23,26 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -36,7 +53,18 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-log4j2</artifactId>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -63,6 +91,12 @@
 			<groupId>com.dangdang</groupId>
 			<artifactId>sharding-jdbc-config-spring</artifactId>
 			<version>${sharding-jdbc-config-spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>sharding-jdbc-core</artifactId>
+					<groupId>com.dangdang</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- sharding-jdbc 依赖 end-->
 
@@ -82,11 +116,23 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.10.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j-api</artifactId>
+					<groupId>org.apache.logging.log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-jcl</artifactId>
 			<version>2.10.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j-api</artifactId>
+					<groupId>org.apache.logging.log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- log4j2和slf4j的桥接 -->
 		<dependency>
@@ -94,6 +140,7 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.10.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -103,6 +150,19 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.7.25</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<artifactId>ch.qos.logback</artifactId>-->
+					<!--<groupId>logback-classic</groupId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<!-- log4j2异步日志需要加载disruptor-3.0.0.jar或者更高的版本 -->
 		<dependency>
@@ -113,12 +173,6 @@
 		<!-- log end-->
 
 		<!--rocketmq客户端 依赖-->
-		<!--<dependency>-->
-			<!--<groupId>com.alibaba.rocketmq</groupId>-->
-			<!--<artifactId>rocketmq-client</artifactId>-->
-			<!--<version>3.2.6</version>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
