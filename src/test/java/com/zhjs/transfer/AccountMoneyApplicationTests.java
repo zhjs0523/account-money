@@ -7,6 +7,7 @@ import com.zhjs.transfer.dto.TransferDocDTO;
 import com.zhjs.transfer.entity.AccountInfo;
 import com.zhjs.transfer.service.TransferService;
 import com.zhjs.transfer.utils.RSAUtil;
+import com.zhjs.transfer.utils.SnowFlake;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class AccountMoneyApplicationTests {
 	public void testTransfer(){
 		TransferDocDTO transferDocDTO = new TransferDocDTO();
 		TransferDTO transferDTO = new TransferDTO();
-		transferDTO.setRequestId(String.valueOf(System.currentTimeMillis()));
+		transferDTO.setRequestId(String.valueOf(SnowFlake.getSnowFlakeId()));
 		transferDTO.setPayerAccount("zhjs@pay.com");
 		transferDTO.setPayeeAccount("zxh@pay.com");
 		transferDTO.setAmount(200L);

@@ -1,7 +1,7 @@
 package com.zhjs.transfer.utils;
 
 /**
- * Created by TK on 2019/6/4.
+ * Created by zhjs on 2019/6/4.
  * 分布式系统id生成器 雪花算法
  */
 public class SnowFlake {
