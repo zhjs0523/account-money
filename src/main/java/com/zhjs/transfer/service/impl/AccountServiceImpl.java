@@ -12,12 +12,11 @@ import com.zhjs.transfer.entity.TransferTask;
 import com.zhjs.transfer.exception.AccountException;
 import com.zhjs.transfer.service.AccountService;
 import com.zhjs.transfer.service.MQProducerService;
+import com.zhjs.transfer.utils.SnowFlake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -30,7 +29,7 @@ import java.util.Date;
  * @Desc: TODO
  */
 @Service
-@Transactional(rollbackFor = Exception.class,isolation = Isolation.DEFAULT,timeout = 3000,propagation = Propagation.REQUIRED)
+@Transactional(rollbackFor = Exception.class)
 @Slf4j
 public class AccountServiceImpl implements AccountService {
 
@@ -61,6 +60,7 @@ public class AccountServiceImpl implements AccountService {
         try{
             //存放转账任务记录，做幂等处理
             TransferTask transferTask = new TransferTask();
+            transferTask.setId(SnowFlake.getSnowFlakeId());
             transferTask.setPayAccountId(transferDTO.getPayerAccount());
             transferTask.setTransactionId(transferDTO.getRequestId());
             transferTask.setDirection(DirectionEnum.DECREASE.getValue());
@@ -77,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
         AccountInfo accountInfo = accountInfoMapper.queryBalance(transferDTO.getPayerAccount());
         if(null == accountInfo || accountInfo.getAmount() < transferDTO.getAmount()){
             //账户不存在或余额不足
-            throw new AccountException("账户异常");
+            throw new AccountException("余额不足");
         }
         //扣减A账户余额  加乐观锁控制
         accountInfoMapper.updateAccountInfo(accountInfo.getVersionId(),accountInfo.getAmount() - transferDTO.getAmount(),transferDTO.getPayerAccount());
@@ -85,6 +85,7 @@ public class AccountServiceImpl implements AccountService {
         try{
             mqProducerService.send(topics, MQTags.INCREASE,String.valueOf(System.currentTimeMillis()), transferDTO);
         }catch(Exception e){
+            e.printStackTrace();
             log.error(e.getMessage());
             throw new MQClientException(0,"消息发送失败");
         }
@@ -104,6 +105,7 @@ public class AccountServiceImpl implements AccountService {
         try{
             //存放转账任务记录，做幂等处理
             TransferTask transferTask = new TransferTask();
+            transferTask.setId(SnowFlake.getSnowFlakeId());
             transferTask.setPayAccountId(transferDTO.getPayeeAccount());
             transferTask.setTransactionId(transferDTO.getRequestId());
             transferTask.setDirection(DirectionEnum.INCREASE.getValue());
@@ -158,6 +160,7 @@ public class AccountServiceImpl implements AccountService {
             }
             return true;
         }catch(Exception e){
+            e.printStackTrace();
             log.error("修改消息状态为最终状态失败");
             throw new AccountException("修改消息状态为最终状态失败");
         }

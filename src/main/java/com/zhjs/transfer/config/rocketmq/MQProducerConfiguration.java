@@ -42,6 +42,8 @@ public class MQProducerConfiguration {
     @Value("${rocketmq.producer.retryTimesWhenSendFailed}")
     private Integer retryTimesWhenSendFailed;
 
+    @Value("${rocketmq.consumer.topics}")
+    private String topics;
     @Bean
     public DefaultMQProducer getRocketMQProducer(){
         DefaultMQProducer producer = null;
@@ -55,6 +57,7 @@ public class MQProducerConfiguration {
 
             producer = new DefaultMQProducer(this.groupName);
             producer.setNamesrvAddr(this.namesrvAddr);
+//            producer.setCreateTopicKey(topics);
             //如果需要同一个jvm中不同的producer往不同的mq集群发送消息，需要设置不同的instanceName
             //producer.setInstanceName(instanceName);
             if(this.maxMessageSize!=null){

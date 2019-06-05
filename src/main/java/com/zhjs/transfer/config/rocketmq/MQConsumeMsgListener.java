@@ -50,6 +50,7 @@ public class MQConsumeMsgListener implements MessageListenerConcurrently {
             if(topics.equals(messageExt.getTopic())){
                 if(messageExt.getReconsumeTimes() == 3){
                     //重试消费了三次，无需再次消费，返回成功
+                    logger.info("已经重发三次，无需再发");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 String tags = messageExt.getTags();

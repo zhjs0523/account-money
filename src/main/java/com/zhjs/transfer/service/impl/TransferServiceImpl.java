@@ -2,7 +2,6 @@ package com.zhjs.transfer.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.zhjs.transfer.contants.Result;
 import com.zhjs.transfer.contants.ReturnCodeEnum;
 import com.zhjs.transfer.dto.TransferDTO;
@@ -26,8 +25,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TransferServiceImpl implements TransferService {
 
-    @Autowired
-    private DefaultMQProducer producer;
 
     @Autowired
     private AccountService accountService;

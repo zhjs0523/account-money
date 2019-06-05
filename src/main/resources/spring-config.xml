@@ -12,7 +12,6 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <!--<value>classpath:common.properties</value>-->
                 <value>classpath:jdbc.properties</value>
             </list>
         </property>

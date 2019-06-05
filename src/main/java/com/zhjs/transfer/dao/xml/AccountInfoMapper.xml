@@ -23,7 +23,7 @@
     delete from account
     where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhjs.transfer.entity.AccountInfo" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.zhjs.transfer.entity.AccountInfo" >
     insert into account (ID, PAY_ACCOUNT_ID, AMOUNT,
       VERSION_ID, REMARK, CREATED, 
       MODIFIED)

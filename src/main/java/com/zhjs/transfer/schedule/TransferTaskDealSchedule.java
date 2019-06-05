@@ -36,7 +36,7 @@ public class TransferTaskDealSchedule {
     @Value("${rocketmq.consumer.topics}")
     private String topics;
 
-    @Scheduled(cron = "0 0 0/2 * * ?")
+//    @Scheduled(cron = "0 0 0/2 * * ?")
     public void dealTransferTask(){
         try{
             List<TransferTask> transferTasks = transferTaskMapper.queryByStatus(TaskStatus.SUCCESS);
