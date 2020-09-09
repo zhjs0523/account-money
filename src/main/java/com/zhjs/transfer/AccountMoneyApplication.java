@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = {"com.zhjs.transfer"},exclude = {})
-@ImportResource("classpath:spring-config.xml")
-//@MapperScan("com.zhjs.transfer.dao")
+//@ImportResource("classpath:spring-config.xml")
+@MapperScan("com.zhjs.transfer.dao")
 public class AccountMoneyApplication{
 
 	public static void main(String[] args) {
