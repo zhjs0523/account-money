@@ -34,4 +34,9 @@ public class TransferDTO extends MQEntity implements Serializable{
      * 请求流水号
      */
     private String requestId;
+
+    /**
+     * 备注
+     */
+    private String remark;
 }

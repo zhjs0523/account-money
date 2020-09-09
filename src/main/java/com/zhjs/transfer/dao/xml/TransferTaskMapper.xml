@@ -158,6 +158,6 @@
     SELECT
      <include refid="Base_Column_List"/>
     from transfer_task
-    where STATUS #{status} and direction = #{direction}
+    where STATUS = #{status} and direction = #{direction}
   </select>
 </mapper>

@@ -8,7 +8,12 @@ import com.zhjs.transfer.service.AccountService;
 import com.zhjs.transfer.service.TransferService;
 import com.zhjs.transfer.utils.RSAUtil;
 import com.zhjs.transfer.utils.SnowFlake;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/account")
+@Api(value = "AccountController", description = "账户相关api")
 public class AccountController {
 
     @Autowired
@@ -32,6 +38,10 @@ public class AccountController {
 
 
     @RequestMapping("/query/byId")
+    @ApiOperation(value = "查找账户", notes = "查找账户", httpMethod = "POST", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "账户id",dataType = "Long")
+    })
     public AccountInfo queryById(Long id){
         return accountService.queryById(id);
     }
@@ -54,6 +64,7 @@ public class AccountController {
         transferDTO.setPayerAccount("zhjs@pay.com");
         transferDTO.setPayeeAccount("zxh@pay.com");
         transferDTO.setAmount(200L);
+        transferDTO.setRemark("转账200元");
         String transferInfo = JSON.toJSONString(transferDTO);
         transferDocDTO.setAppId("001");
         transferDocDTO.setTransferInfo(transferInfo);

@@ -42,8 +42,6 @@ public class MQProducerConfiguration {
     @Value("${rocketmq.producer.retryTimesWhenSendFailed}")
     private Integer retryTimesWhenSendFailed;
 
-    @Value("${rocketmq.consumer.topics}")
-    private String topics;
     @Bean
     public DefaultMQProducer getRocketMQProducer(){
         DefaultMQProducer producer = null;
