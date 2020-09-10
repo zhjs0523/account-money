@@ -12,7 +12,7 @@
 2. 安全：使用非对称加密，加密验签。
 3. 幂等性处理：通过建立交易单号的数据库唯一索引
 4. 失败重试： RocketMQ重试机制
-5. 分库分表：使用sharding-jdbc，分库分表策略是使用支付账户编号进行哈希取模
+5. 分库分表：使用mycat，分库分表策略是使用支付账户编号进行哈希对3取模
 6. 项目架构：springboot
 7. 日志：Log4j2异步日志输出
 8. 补偿机制：生产方定时扫描消息表中的失败消息，重新发送一次
@@ -32,7 +32,6 @@
 ### 项目包划分
   - config 配置类的统一包
     - rocketmq  rocketmq生产者和消费者的配置
-    - shardingjdbc  shardingjdbc双数据源配置
   - constants 系统全局变量的定义
   - controller 控制层
   - dao  dao层

@@ -131,13 +131,11 @@ public class AccountServiceImpl implements AccountService {
                 //更新消息为最终状态
                 mqProducerService.send(topics,MQTags.INCREASE_SUCCESS,String.valueOf(System.currentTimeMillis()),transferDTO);
             }
-        }
-        catch (MQClientException e){
+        }catch (MQClientException e){
             //自己把异常吃掉，不抛出
             //这样可以使B账户增加余额的事物提交成功，不影响后续流程，通知A系统使用补偿机制
             log.error("通知MQ失败",e);
-        }
-        catch (Exception e){
+        }catch (Exception e){
             //回滚A
             log.error("回滚A。。。",e);
             mqProducerService.send(topics,MQTags.ACCOUNT_CALLBACK,String.valueOf(System.currentTimeMillis()),transferDTO);
