@@ -35,7 +35,7 @@ public class MQProducerServiceImpl implements MQProducerService{
         try{
             producer.send(msg);
         }catch(Exception e){
-            log.error("消息发送失败，msg:{}",msg);
+            log.error("消息发送失败，msg:{}",msg,e);
             throw new MQClientException(0,"消息发送失败！");
         }
     }

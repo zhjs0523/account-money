@@ -17,6 +17,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ import java.util.Date;
  * @Desc: TODO
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
 @Slf4j
 public class AccountServiceImpl implements AccountService {
 

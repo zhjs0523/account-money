@@ -46,8 +46,8 @@ public class AccountMoneyApplicationTests {
 		TransferDocDTO transferDocDTO = new TransferDocDTO();
 		TransferDTO transferDTO = new TransferDTO();
 		transferDTO.setRequestId(String.valueOf(SnowFlake.getSnowFlakeId()));
-		transferDTO.setPayerAccount("zhjs@pay.com");
-		transferDTO.setPayeeAccount("zxh@pay.com");
+		transferDTO.setPayerAccount("fhy@pay.com");
+		transferDTO.setPayeeAccount("风险账户");
 		transferDTO.setAmount(200L);
 		String transferInfo = JSON.toJSONString(transferDTO);
 		transferDocDTO.setAppId("001");
